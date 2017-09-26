@@ -49,7 +49,7 @@ class BooksApp extends React.Component {
     this.setState({ loading: true })
     BooksAPI.getAll()
       .then(this.addBooks)
-      .then(() => this.setState({ loading: false}))
+      .then(() => this.setState({ loading: false }))
   }
 
   render() {
