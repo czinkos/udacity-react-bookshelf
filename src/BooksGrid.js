@@ -5,7 +5,7 @@ function BooksGrid(props) {
   return (
     <ol className="books-grid">
       {props.books.map(book =>
-        <li key={book.id}>
+        <li key={book.id} className={book.shelf} title={book.shelf}>
           <Book id={book.id}
                 title={book.title}
                 authors={book.authors || []}

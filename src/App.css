@@ -20,6 +20,23 @@ body, .app {
   z-index: 999;
 }
 
+.books-grid li {
+  border: 2px solid transparent;
+  margin: 3px;
+}
+
+.search-books-results .currentlyReading {
+  border: 2px solid green;
+}
+
+.search-books-results .wantToRead {
+  border: 2px solid red;
+}
+
+.search-books-results .read {
+  border: 2px solid navy;
+}
+
 /* main page */
 
 .list-books-title {
