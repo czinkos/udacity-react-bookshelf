@@ -8,17 +8,21 @@ class Bookshelf extends React.Component {
         <h2 className="bookshelf-title">{this.props.title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {this.props.books.map((book,i) =>
+            {this.props.books.length > 0 &&
+              this.props.books.map((book,i) =>
               <li key={i}>
                 <Book id={1}
                       title={book.title}
                       authors={book.authors}
-                      cover={book.cover}
+                      cover={book.imageLinks.thumbnail}
                       shelf={book.shelf}
                       onShelfChange={this.props.onShelfChange}
                       shelves={this.props.shelves}/>
               </li>
             )}
+            { this.props.books.length === 0 &&
+              <p>This shelf is empty.</p>
+            }
           </ol>
         </div>
       </div>

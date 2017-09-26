@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Bookshelf from './Bookshelf'
 
@@ -8,6 +8,8 @@ class BooksApp extends React.Component {
   constructor(props) {
     super(props)
     this.shelfChange = this.shelfChange.bind(this)
+    this.addBooksToShelf = this.addBooksToShelf.bind(this)
+    this.getBookList = this.getBookList.bind(this)
   }
 
   shelves = [
@@ -17,22 +19,38 @@ class BooksApp extends React.Component {
   ]
 
   state = {
+    books: {},
+    shelves: {}
+  }
 
-    currentlyReading: [
-                    {
-                      cover: "http://books.google.com/books/content?id=uu1mC6zWNTwC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73pGHfBNSsJG9Y8kRBpmLUft9O4BfItHioHolWNKOdLavw-SLcXADy3CPAfJ0_qMb18RmCa7Ds1cTdpM3dxAGJs8zfCfm8c6ggBIjzKT7XR5FIB53HHOhnsT7a0Cc-PpneWq9zX&source=gbs_api",
-                      title: 'To Kill a Mockingbird',
-                      authors: ['Harper Lee'],
-                      shelf: "currentlyReading"
-                    }
-    ],
-    wantToRead: [],
-    read: []
+  addBooksToShelf(data) {
+    const state = data.reduce((acc, d) => {
+      if (!acc.shelves[d.shelf]) acc.shelves[d.shelf] = [];
+      acc.shelves[d.shelf].push(d.id);
+      acc.books[d.id] = d;
+      return acc;
+    }, this.state)
+    this.setState(state);
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then(this.addBooksToShelf)
   }
 
   shelfChange(bookId, oldShelf, newShelf) {
     console.log(bookId, oldShelf, newShelf)
+    BooksAPI.update(bookId, newShelf)
+      .then(data => {
+        console.log(data);
+        BooksAPI.getAll()
+          .then(console.log);
+      })
+
   }
+
+  getBookList = shelf =>
+    (this.state.shelves[shelf] || []).map(e => this.state.books[e])
 
   render() {
     return (
@@ -66,11 +84,11 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                {this.shelves.map(e =>
+                {this.shelves.map(shelf =>
                 <Bookshelf
-                  key={e.id}
-                  title={e.name}
-                  books={this.state[e.id]}
+                  key={shelf.id}
+                  title={shelf.name}
+                  books={this.getBookList(shelf.id)}
                   onShelfChange={this.shelfChange}
                   shelves={this.shelves}/>
                 )}
