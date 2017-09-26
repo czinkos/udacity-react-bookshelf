@@ -22,8 +22,7 @@ class BooksApp extends React.Component {
   state = {
     books: {},
     shelves: {},
-    loading: false,
-    searchHits: []
+    loading: false
   }
 
   addBooks(data) {
