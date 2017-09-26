@@ -4,9 +4,10 @@ You need node and react-scripts installed.
 
 In current directory:
 
-
+```
 $ npm install
 $ npm start
+```
 
 After that visit: http://localhost:3000
 
