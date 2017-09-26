@@ -20,8 +20,11 @@ class Bookshelf extends React.Component {
                       shelves={this.props.shelves}/>
               </li>
             )}
-            { this.props.books.length === 0 &&
+            { !this.props.loading && this.props.books.length === 0 &&
               <p>This shelf is empty.</p>
+            }
+            { this.props.loading &&
+              <p>Loading...</p>
             }
           </ol>
         </div>

@@ -20,7 +20,8 @@ class BooksApp extends React.Component {
 
   state = {
     books: {},
-    shelves: {}
+    shelves: {},
+    loading: false
   }
 
   addBooks(data) {
@@ -36,11 +37,6 @@ class BooksApp extends React.Component {
     this.setState(state);
   }
 
-  componentDidMount() {
-    BooksAPI.getAll()
-      .then(this.addBooks)
-  }
-
   shelfChange(bookId, shelf) {
     BooksAPI.update(this.state.books[bookId], shelf)
       .then(shelves => this.setState( { shelves }))
@@ -48,6 +44,13 @@ class BooksApp extends React.Component {
 
   getBookList = shelf =>
     (this.state.shelves[shelf] || []).map(e => this.state.books[e])
+
+  componentDidMount() {
+    this.setState({ loading: true })
+    BooksAPI.getAll()
+      .then(this.addBooks)
+      .then(() => this.setState({ loading: false}))
+  }
 
   render() {
     return (
@@ -84,6 +87,7 @@ class BooksApp extends React.Component {
                 {this.shelves.map(shelf =>
                 <Bookshelf
                   key={shelf.id}
+                  loading={this.state.loading}
                   id={shelf.id}
                   title={shelf.name}
                   books={this.getBookList(shelf.id)}
