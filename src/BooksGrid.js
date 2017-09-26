@@ -4,8 +4,7 @@ import Book from './Book';
 function BooksGrid(props) {
   return (
     <ol className="books-grid">
-      {props.books.length > 0 &&
-        props.books.map(book =>
+      {props.books.map(book =>
         <li key={book.id}>
           <Book id={book.id}
                 title={book.title}
@@ -13,12 +12,9 @@ function BooksGrid(props) {
                 cover={book.imageLinks && book.imageLinks.thumbnail}
                 shelf={book.shelf}
                 onShelfChange={ (event) => props.onShelfChange(book, event.target.value) }
-                shelves={props.shelves}/>
+                shelfList={props.shelfList}/>
         </li>
       )}
-      { props.loading &&
-        <p>Loading...</p>
-      }
     </ol>
   )
 }

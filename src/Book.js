@@ -12,7 +12,7 @@ class Book extends React.Component {
             <select value={this.props.shelf || 'none'}
                     onChange={this.props.onShelfChange}>
               <option value="none" disabled>Move to...</option>
-              {this.props.shelves.map(shelf =>
+              {this.props.shelfList.map(shelf =>
                 <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
               )}
               <option value="none">None</option>
