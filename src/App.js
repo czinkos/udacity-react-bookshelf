@@ -3,6 +3,7 @@ import { Route, Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Bookshelf from './Bookshelf'
+import BooksGrid from './BooksGrid'
 
 class BooksApp extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class BooksApp extends React.Component {
     this.shelfChange = this.shelfChange.bind(this)
     this.addBooks = this.addBooks.bind(this)
     this.getBookList = this.getBookList.bind(this)
+    this.onQueryChange = this.onQueryChange.bind(this)
   }
 
   shelves = [
@@ -21,7 +23,8 @@ class BooksApp extends React.Component {
   state = {
     books: {},
     shelves: {},
-    loading: false
+    loading: false,
+    searchHits: []
   }
 
   addBooks(data) {
@@ -39,17 +42,23 @@ class BooksApp extends React.Component {
 
   shelfChange(bookId, shelf) {
     BooksAPI.update(this.state.books[bookId], shelf)
-      .then(shelves => this.setState( { shelves }))
+      .then(shelves => this.setState( { shelves }));
   }
 
   getBookList = shelf =>
-    (this.state.shelves[shelf] || []).map(e => this.state.books[e])
+    (this.state.shelves[shelf] || []).map(e => this.state.books[e]);
+
+  onQueryChange(event) {
+    const query = event.target.value;
+    BooksAPI.search(query)
+      .then(searchHits => this.setState({ searchHits }));
+  }
 
   componentDidMount() {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     BooksAPI.getAll()
       .then(this.addBooks)
-      .then(() => this.setState({ loading: false }))
+      .then(() => this.setState({ loading: false }));
   }
 
   render() {
@@ -68,12 +77,18 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
-
+                <input type="text"
+                  value={this.query}
+                  onChange={this.onQueryChange}
+                  placeholder="Search by title or author"/>
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <BooksGrid
+                books={this.state.searchHits}
+                shelves={this.shelves}
+                onShelfChange={this.shelfChange}
+                loading={this.state.loading}/>
             </div>
           </div>
         } />
