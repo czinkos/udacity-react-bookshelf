@@ -8,7 +8,7 @@ class Book extends React.Component {
 
   onShelfChange(event) {
     this.props.onShelfChange(
-      this.props.id, this.props.shelf, event.target.value);
+      this.props.id, event.target.value);
   }
 
   render() {

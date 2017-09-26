@@ -8,7 +8,7 @@ class BooksApp extends React.Component {
   constructor(props) {
     super(props)
     this.shelfChange = this.shelfChange.bind(this)
-    this.addBooksToShelf = this.addBooksToShelf.bind(this)
+    this.addBooks = this.addBooks.bind(this)
     this.getBookList = this.getBookList.bind(this)
   }
 
@@ -23,30 +23,27 @@ class BooksApp extends React.Component {
     shelves: {}
   }
 
-  addBooksToShelf(data) {
+  addBooks(data) {
     const state = data.reduce((acc, d) => {
       if (!acc.shelves[d.shelf]) acc.shelves[d.shelf] = [];
       acc.shelves[d.shelf].push(d.id);
       acc.books[d.id] = d;
       return acc;
-    }, this.state)
+    }, {
+      books: {},
+      shelves: {}
+    })
     this.setState(state);
   }
 
   componentDidMount() {
     BooksAPI.getAll()
-      .then(this.addBooksToShelf)
+      .then(this.addBooks)
   }
 
-  shelfChange(bookId, oldShelf, newShelf) {
-    console.log(bookId, oldShelf, newShelf)
-    BooksAPI.update(bookId, newShelf)
-      .then(data => {
-        console.log(data);
-        BooksAPI.getAll()
-          .then(console.log);
-      })
-
+  shelfChange(bookId, shelf) {
+    BooksAPI.update(this.state.books[bookId], shelf)
+      .then(shelves => this.setState( { shelves }))
   }
 
   getBookList = shelf =>
@@ -87,6 +84,7 @@ class BooksApp extends React.Component {
                 {this.shelves.map(shelf =>
                 <Bookshelf
                   key={shelf.id}
+                  id={shelf.id}
                   title={shelf.name}
                   books={this.getBookList(shelf.id)}
                   onShelfChange={this.shelfChange}

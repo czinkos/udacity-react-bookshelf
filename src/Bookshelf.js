@@ -11,7 +11,7 @@ class Bookshelf extends React.Component {
             {this.props.books.length > 0 &&
               this.props.books.map((book,i) =>
               <li key={i}>
-                <Book id={1}
+                <Book id={book.id}
                       title={book.title}
                       authors={book.authors}
                       cover={book.imageLinks.thumbnail}
