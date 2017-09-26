@@ -12,7 +12,7 @@ function BooksGrid(props) {
                 authors={book.authors || []}
                 cover={book.imageLinks && book.imageLinks.thumbnail}
                 shelf={book.shelf}
-                onShelfChange={props.onShelfChange}
+                onShelfChange={ (event) => props.onShelfChange(book, event.target.value) }
                 shelves={props.shelves}/>
         </li>
       )}

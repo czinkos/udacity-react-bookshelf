@@ -40,9 +40,14 @@ class BooksApp extends React.Component {
     this.setState(state);
   }
 
-  shelfChange(bookId, shelf) {
-    BooksAPI.update(this.state.books[bookId], shelf)
-      .then(shelves => this.setState( { shelves }));
+  shelfChange(book, shelf) {
+    BooksAPI.update(book, shelf)
+      .then(shelves => {
+        const books = this.state.books;
+        books[book.id] = book;
+        book.shelf = shelf;
+        this.setState( { shelves, books });
+      });
   }
 
   getBookList = shelf =>
@@ -51,7 +56,11 @@ class BooksApp extends React.Component {
   onQueryChange(event) {
     const query = event.target.value;
     BooksAPI.search(query)
-      .then(searchHits => this.setState({ searchHits }));
+      .then(searchHits => {
+        this.setState({
+          searchHits: searchHits.map(e => this.state.books[e.id] ? this.state.books[e.id] : e)
+        });
+      });
   }
 
   componentDidMount() {

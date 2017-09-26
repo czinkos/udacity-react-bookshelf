@@ -1,16 +1,6 @@
 import React from 'react'
 
 class Book extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onShelfChange = this.onShelfChange.bind(this);
-  }
-
-  onShelfChange(event) {
-    this.props.onShelfChange(
-      this.props.id, event.target.value);
-  }
-
   render() {
     return (
       <div className="book">
@@ -20,7 +10,7 @@ class Book extends React.Component {
                         backgroundImage: 'url("' + this.props.cover + '")' }}></div>
           <div className="book-shelf-changer">
             <select value={this.props.shelf || 'none'}
-                    onChange={this.onShelfChange}>
+                    onChange={this.props.onShelfChange}>
               <option value="none" disabled>Move to...</option>
               {this.props.shelves.map(shelf =>
                 <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
