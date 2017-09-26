@@ -14,6 +14,7 @@ class SearchPanel extends Component {
     const query = event.target.value;
     BooksAPI.search(query)
       .then(searchHits => {
+        if (searchHits.error) return;
         this.setState({
           searchHits: searchHits.map(
             e => this.props.booksOnShelf[e.id] ? this.props.booksOnShelf[e.id] : e

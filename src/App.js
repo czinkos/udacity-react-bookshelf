@@ -26,6 +26,7 @@ class BooksApp extends React.Component {
   }
 
   addBooks(data) {
+    if (data.error) return;
     const state = data.reduce((acc, d) => {
       if (!acc.shelves[d.shelf]) acc.shelves[d.shelf] = [];
       acc.shelves[d.shelf].push(d.id);
