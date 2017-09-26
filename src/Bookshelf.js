@@ -13,7 +13,7 @@ class Bookshelf extends Component {
               <div>
                 {this.props.shelfList.map(shelf =>
                   <div className="bookshelf" key={shelf.id}>
-                    <h2 className="bookshelf-title">{shelf.title}</h2>
+                    <h2 className="bookshelf-title">{shelf.name}</h2>
                     <div className="bookshelf-books">
                       <BooksGrid
                         books={this.props.books[shelf.id]}

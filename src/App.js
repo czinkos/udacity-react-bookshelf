@@ -1,16 +1,15 @@
 import React from 'react'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Bookshelf from './Bookshelf'
-import BooksGrid from './BooksGrid'
+import SearchPanel from './SearchPanel'
 
 class BooksApp extends React.Component {
   constructor(props) {
     super(props)
     this.shelfChange = this.shelfChange.bind(this)
     this.addBooks = this.addBooks.bind(this)
-    this.onQueryChange = this.onQueryChange.bind(this)
     this.booksByShelf = this.booksByShelf.bind(this)
   }
 
@@ -50,16 +49,6 @@ class BooksApp extends React.Component {
       });
   }
 
-  onQueryChange(event) {
-    const query = event.target.value;
-    BooksAPI.search(query)
-      .then(searchHits => {
-        this.setState({
-          searchHits: searchHits.map(e => this.state.books[e.id] ? this.state.books[e.id] : e)
-        });
-      });
-  }
-
   booksByShelf = () =>
     this.shelfList.reduce((acc, shelf) => {
       acc[shelf.id] = (this.state.shelves[shelf.id] || []).map(b => this.state.books[b]);
@@ -76,25 +65,15 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
+        { this.state.loading &&
+          <div id="loading">Loading...</div>
+        }
         <Route path="/search" render={() =>
-          <div className="search-books">
-            <div className="search-books-bar">
-              <Link className="close-search" to="/">Close</Link>
-              <div className="search-books-input-wrapper">
-                <input type="text"
-                  value={this.props.match}
-                  onChange={this.onQueryChange}
-                  placeholder="Search by title or author"/>
-              </div>
-            </div>
-            <div className="search-books-results">
-              <BooksGrid
-                books={this.state.searchHits}
-                shelfList={this.shelfList}
-                onShelfChange={this.shelfChange}/>
-            </div>
-          </div>
-        } />
+          <SearchPanel
+            shelfList={this.shelfList}
+            booksOnShelf={this.state.books}
+            onShelfChange={this.shelfChange} />
+        }/>
         <Route exact path="/" render={() =>
           <Bookshelf
             shelfList={this.shelfList}
@@ -108,4 +87,4 @@ class BooksApp extends React.Component {
   }
 }
 
-export default BooksApp
+export default BooksApp;
